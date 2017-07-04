@@ -27,8 +27,11 @@ Use the module pattern to wrap all of your JavaScript code into a single global 
   
 
 On the start screen, prompt the user add their name before the game starts
+
 Display the player’s name on the board screen during game play
+
 Add programming to support playing against the computer. Only one player plays; the other is controlled by your programming.
+
 Display the player’s name if they win the game
 
 #Extra resources
