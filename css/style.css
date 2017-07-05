@@ -82,9 +82,14 @@ h1 {
       top: 4.5rem; }
 
 .board {
-  padding-top: 1em; }
+  padding-top: 1em; 
+}
   .board h1 {
     margin-top: 0.3em; }
+#board,
+#finish {
+  display: none;
+}
 
 .players {
   color: rgba(0, 0, 0, 0.2);
@@ -138,4 +143,20 @@ h1 {
       background-color: #3688C3;
       background-image: url(../img/x.svg); }
 
+.playerNames {
+  padding: 1em 4em;
+}
+
+.playerName {
+  display: inline-block;
+}
+
+.player1name {
+  float: left;
+}
+
+.player2name {
+  float: right;
+  margin-right: .7em;
+}
 
