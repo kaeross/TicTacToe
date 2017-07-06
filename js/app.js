@@ -49,54 +49,52 @@
 	function boxhover(event) {
 		const boxes = new Box();
 		boxes.add();
-		function checkwin() {
+		function checkwin(boxes) {
+			const winP = document.querySelector("p.message");
 			const player1name = document.querySelector(".player1name").textContent;
-			if (boxes.win('player1', player1name) === false) {
-				boxes.win('player2', 'computer');
+			if (boxes.win('player1', player1name)) {
+				showPage(endScreen, startScreen, board);
+				endScreen.className = "screen screen-win screen-win-one";
+				winP.textContent = "Winner";
+			} else if (boxes.win('player1', player1name) === false) {
+				if (boxes.win('player2', 'computer')) {
+					showPage(endScreen, startScreen, board);
+					endScreen.className = "screen screen-win screen-win-two";
+					winP.textContent = "Winner";
+				}
 			}
+		}
+		function checkEvents(i, box, boxes, playersvg, bgColor, playerID, nextPlayer) {
+			if (event === 'mouseenter' && boxes.isSelected(i) === false) {
+				box.style.backgroundImage = playersvg;
+			} else if (event === 'mouseleave' && boxes.isSelected(i) === false){
+				box.style.backgroundImage = "";
+			} else if (event === 'click' && boxes.isSelected(i) === false ){
+				box.style.backgroundImage = playersvg;
+				box.style.backgroundColor = bgColor;
+				box.className = `box selected ${playerID}`;
+				nextPlayer.activate();
+				checkwin(boxes);
+			} 
 		}
 		for (let i = 0; i < boxes.boxArray.length; i += 1) {
 			boxes.boxArray[i].addEventListener(event, function(e) {
 				var box = e.target;
 				if (playerOne.isActive()) {
-					if (event === 'mouseenter' && boxes.isSelected(i) === false) {
-						box.style.backgroundImage = playerOne.svg;
-					} else if (event === 'mouseleave' && boxes.isSelected(i) === false){
-						box.style.backgroundImage = "";
-					} else if (event === 'click' && boxes.isSelected(i) === false ){
-						box.style.backgroundImage = playerOne.svg;
-						box.style.backgroundColor = '#FFA000';
-						box.className = 'box selected player1';
-						playerTwo.activate();
-					} else if (event === 'click' && boxes.isSelected(i)){
-						checkwin();
-					}
+					checkEvents(i, box, boxes, playerOne.svg, '#FFA000', playerOne.id, playerTwo);
 				} else if (playerTwo.isActive()) {
-					if (event === 'mouseenter' && boxes.isSelected(i) === false) {
-						box.style.backgroundImage = playerTwo.svg;
-					} else if (event === 'mouseleave' && boxes.isSelected(i) === false) {
-						box.style.backgroundImage = "";
-					} else if (event === 'click' && boxes.isSelected(i) === false){
-						box.style.backgroundImage = playerTwo.svg;
-						box.style.backgroundColor = '#3688C3';
-						box.className = 'box selected player2';
-						playerOne.activate(); 
-					} else if (event === 'mouseup' && boxes.isSelected(i) === true ){
-						checkwin();
-					}
+					checkEvents(i, box, boxes, playerTwo.svg, '#3688C3', playerTwo.id, playerOne);
 				} else if (board.style.display = 'block' && event === 'click') {
 					alert("Oops! You didn't select a player to start!");
 				}
 			});
 		}
 	}
+
 	boxhover('mouseenter');
 	boxhover('mouseleave');
 	boxhover('click');
 	boxhover('mouseup');
-
-	//on mouseup check if player1 win
-	//if false check if player 2 win
 
 
 
