@@ -33,64 +33,54 @@
 
 	});
 
-	function activate(player) {
-		if (player === player1) {
-			player1.className = "active players player1";
-			player2.className = "players player2";
-		}
-		else if (player === player2) {
-			player2.className = "active players player2";
-			player1.className = "players player1";
-		}
-	}
 
 	//Choose player to start
 	(function selectPlayer() {
 		player1.addEventListener('click', function(){
-			activate(player1)
+			playerOne.activate()
 		});
 		player2.addEventListener('click', function(){
-			activate(player2)
+			playerTwo.activate()
 		});
 	})();
 
-	function isActive(player) {
-		if (player.classList.contains('active')) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 
-	function boxhover(event, bgImage1, bgImage2) {
-		const allBox = document.getElementsByClassName("box");
-		for (let i = 0; i < allBox.length; i += 1) {
-			allBox[i].addEventListener( event, function(e) {
+	function boxhover(event) {
+		const boxes = new Box();
+		boxes.add();
+		for (let i = 0; i < boxes.boxArray.length; i += 1) {
+			boxes.boxArray[i].addEventListener(event, function(e) {
 				var box = e.target;
-				if (isActive(player1)) {
-					box.style.backgroundImage = bgImage1;
-				} else if (isActive(player2)) {
-					box.style.backgroundImage = bgImage2;
+				if (playerOne.isActive()) {
+					if (event === 'mouseenter' && boxes.isSelected(i) === false) {
+						box.style.backgroundImage = playerOne.svg;
+					} else if (event === 'mouseleave' && boxes.isSelected(i) === false){
+						box.style.backgroundImage = "";
+					} else if (event === 'click' && boxes.isSelected(i) === false ){
+						box.style.backgroundImage = playerOne.svg;
+						box.style.backgroundColor = '#FFA000';
+						box.className = 'box selected';
+						playerTwo.activate();
+					}
+				} else if (playerTwo.isActive()) {
+					if (event === 'mouseenter' && boxes.isSelected(i) === false) {
+						box.style.backgroundImage = playerTwo.svg;
+					} else if (event === 'mouseleave' && boxes.isSelected(i) === false) {
+						box.style.backgroundImage = "";
+					} else if (event === 'click' && boxes.isSelected(i) === false){
+						box.style.backgroundImage = playerTwo.svg;
+						box.style.backgroundColor = '#3688C3';
+						box.className = 'box selected';
+						playerOne.activate(); 
+					}
 				}
 			});
 		}
 	}
 
-	boxhover('mouseenter', 'url("img/o.svg")', 'url("img/x.svg")');
-	boxhover('mouseleave', '', '');
-
-	function boxClick() {
-		boxhover('click', 'url("img/o.svg")', 'url("img/x.svg")');
-		if (isActive(player1)) {
-			activate(player2);
-		} else if (isActive(player2)) {
-			activate(player1);
-		}
-	}
-
-
-
-
+	boxhover('mouseenter');
+	boxhover('mouseleave');
+	boxhover('click');
 
 
 
