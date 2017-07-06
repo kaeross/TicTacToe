@@ -113,8 +113,14 @@ h1 {
     fill: #fff; }
   #player1.active {
     background: #FFA000; }
+      #player1:hover {
+    background: #FFA000;
+    cursor: pointer; }
   #player2.active {
     background: #3688C3; }
+    #player2:hover {
+    background: #3688C3;
+    cursor: pointer; }
 
 .boxes {
   width: 480px;
