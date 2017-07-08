@@ -1,4 +1,4 @@
-// (function ticTacToe() {
+(function ticTacToe() {
 
 	const body = document.body;
 	const board = document.getElementById("board");
@@ -144,12 +144,5 @@
 		})();
 
 
-
-
-
-
-
-
-
-// })();
+})();
 
