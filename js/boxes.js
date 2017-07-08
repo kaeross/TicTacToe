@@ -22,6 +22,14 @@ Box.prototype.allSelected = function() {
 	}
 }
 
+Box.prototype.clearBoard = function() {
+	for (i = 0; i < this.boxArray.length; i++) {
+		this.boxArray[i].className = 'box';
+		this.boxArray[i].style.backgroundImage = '';
+		this.boxArray[i].style.backgroundColor = '#EFEFEF';
+	}
+}
+
 Box.prototype.isPlayer = function(num, playerID){
 	if (this.boxArray[num].classList.contains(`${playerID}`)) {
 		return true;
