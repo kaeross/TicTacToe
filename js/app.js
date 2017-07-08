@@ -103,46 +103,43 @@
 
 		//check if game has been won/drawn/lost and show appropriate end screen
 		function checkwin(boxes) {
-				//new game - clear board
-				function newGame() {
-					function deactivatePlayers() {
-						player2.className = "players player2";
-						player1.className = "players player1";
-					}
-					const newGameButton = document.querySelector('#finish .button');
-					newGameButton.addEventListener('click', () => {
-						gridSquares.clearBoard();
-						deactivatePlayers();
-						showPage(board, endScreen, startScreen);
-					}) 
+			const winP = document.querySelector("p.message");
+			const player1name = document.querySelector(".player1name").textContent;
+			//show correct screen according to winner or if tied
+			function endGame(gameState, winText) {
+				showPage(endScreen, startScreen, board);
+				endScreen.className = `screen screen-win screen-win-${gameState}`;
+				winP.textContent = winText;
+				newGame();
+			}
+			//new game - clear board
+			function newGame() {
+				function deactivatePlayers() {
+					player2.className = "players player2";
+					player1.className = "players player1";
 				}
-				const winP = document.querySelector("p.message");
-				const player1name = document.querySelector(".player1name").textContent;
-				if (boxes.allSelected() === true) {
-					showPage(endScreen, startScreen, board);
-					endScreen.className = "screen screen-win screen-win-tie";
-					winP.textContent = "Tie";
-					newGame();
-				} else if (boxes.win('player1', player1name)) {
-					showPage(endScreen, startScreen, board);
-					endScreen.className = "screen screen-win screen-win-one";
-					winP.textContent = "Winner";
-					newGame();
-				} else if (boxes.win('player1', player1name) === false) {
-					if (boxes.win('player2', 'computer')) {
-						showPage(endScreen, startScreen, board);
-						endScreen.className = "screen screen-win screen-win-two";
-						winP.textContent = "Winner";
-						newGame();
-					}
+				const newGameButton = document.querySelector('#finish .button');
+				newGameButton.addEventListener('click', () => {
+					gridSquares.clearBoard();
+					deactivatePlayers();
+					showPage(board, endScreen, startScreen);
+				}) 
+			}
+			if (boxes.allSelected() === true) {
+				endGame('tie', 'tie');
+			} else if (boxes.win('player1', player1name)) {
+				endGame('one', 'Winner');
+			} else if (boxes.win('player1', player1name) === false) {
+				if (boxes.win('player2', 'computer')) {
+					endGame('two', 'Winner');
 				}
 			}
-			grid.addEventListener('click', (e) => {
-				checkwin(gridSquares);
-			});
+		}
+		grid.addEventListener('click', (e) => {
+			checkwin(gridSquares);
+		});
 
-		})();
-
+	})();
 
 })();
 
