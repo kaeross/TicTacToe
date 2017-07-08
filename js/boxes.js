@@ -10,11 +10,15 @@ Box.prototype.add = function(){
 	}
 }
 
-Box.prototype.isSelected = function(num){
-	if (this.boxArray[num].classList.contains('selected')) {
+Box.prototype.allSelected = function() {
+	let selectedBoxes = 0;
+	for (i = 0; i < this.boxArray.length; i++) {
+		if (this.boxArray[i].classList.contains('selected')) {
+			selectedBoxes += 1;
+		}
+	}
+	if (selectedBoxes === this.boxArray.length) {
 		return true;
-	} else {
-		return false;
 	}
 }
 

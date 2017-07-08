@@ -1,4 +1,4 @@
-(function ticTacToe() {
+// (function ticTacToe() {
 
 	const body = document.body;
 	const board = document.getElementById("board");
@@ -44,15 +44,29 @@
 		});
 	})();
 
-	//uses gridUI.js for constructor function
-	//grid shows naught or cross on hover and keeps it there when clicked
-	function boxhover(event) {
-		const boxes = new Box();
-		boxes.add();
+
+
+	//Board controls
+	(function gridSelection() {
+		var grid = document.querySelector(".boxes");
+		const gridSquares = new Box();
+		gridSquares.add();
+		function disabledBox(target) {
+			if (target.classList.contains('selected')) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
 		function checkwin(boxes) {
 			const winP = document.querySelector("p.message");
 			const player1name = document.querySelector(".player1name").textContent;
-			if (boxes.win('player1', player1name)) {
+			if (boxes.allSelected() === true) {
+				showPage(endScreen, startScreen, board);
+				endScreen.className = "screen screen-win screen-win-tie";
+				winP.textContent = "Tie";
+			} else if (boxes.win('player1', player1name)) {
 				showPage(endScreen, startScreen, board);
 				endScreen.className = "screen screen-win screen-win-one";
 				winP.textContent = "Winner";
@@ -64,41 +78,69 @@
 				}
 			}
 		}
-		function checkEvents(i, box, boxes, playersvg, bgColor, playerID, nextPlayer) {
-			if (event === 'mouseenter' && boxes.isSelected(i) === false) {
-				box.style.backgroundImage = playersvg;
-			} else if (event === 'mouseleave' && boxes.isSelected(i) === false){
-				box.style.backgroundImage = "";
-			} else if (event === 'click' && boxes.isSelected(i) === false ){
-				box.style.backgroundImage = playersvg;
-				box.style.backgroundColor = bgColor;
-				box.className = `box selected ${playerID}`;
-				nextPlayer.activate();
-				checkwin(boxes);
-			} 
-		}
-		for (let i = 0; i < boxes.boxArray.length; i += 1) {
-			boxes.boxArray[i].addEventListener(event, function(e) {
-				var box = e.target;
+
+		grid.addEventListener('mouseenter', (e) => {
+			var box = e.target;
+			if (disabledBox(box) === false) {
 				if (playerOne.isActive()) {
-					checkEvents(i, box, boxes, playerOne.svg, '#FFA000', playerOne.id, playerTwo);
+					box.style.backgroundImage = playerOne.svg;
 				} else if (playerTwo.isActive()) {
-					checkEvents(i, box, boxes, playerTwo.svg, '#3688C3', playerTwo.id, playerOne);
-				} else if (board.style.display = 'block' && event === 'click') {
-					alert("Oops! You didn't select a player to start!");
+					box.style.backgroundImage = playerTwo.svg;
 				}
-			});
-		}
-	}
+			}
+		});
 
-	boxhover('mouseenter');
-	boxhover('mouseleave');
-	boxhover('click');
-	boxhover('mouseup');
+		grid.addEventListener('mouseover', (e) => {
+			var box = e.target;
+			if (disabledBox(box) === false) {
+				if (playerOne.isActive()) {
+					box.style.backgroundImage = playerOne.svg;
+				} else if (playerTwo.isActive()) {
+					box.style.backgroundImage = playerTwo.svg;
+				}
+			}
+		});
+
+		grid.addEventListener('mouseout', (e) => {
+			var box = e.target;
+			if (disabledBox(box) === false) {
+				box.style.backgroundImage = "";
+			}
+		});
+
+		grid.addEventListener('click', (e) => {			
+			if (board.style.display = 'block' && playerOne.isActive() === false && playerTwo.isActive() === false) {
+				alert("Oops! You didn't select a player to start!");
+			} else {
+				var box = e.target;
+				if (disabledBox(box) === false) {
+					if (playerOne.isActive()) {
+						box.style.backgroundImage = playerOne.svg;
+						box.style.backgroundColor = '#FFA000';
+						box.className = 'box selected player1';
+						playerTwo.activate();
+					} else if (playerTwo.isActive) {
+						box.style.backgroundImage = playerTwo.svg;
+						box.style.backgroundColor = '#3688C3';
+						box.className = 'box selected player2';
+						playerOne.activate(); 
+					}
+				}
+			}
+		});
+
+		grid.addEventListener('click', (e) => {
+			checkwin(gridSquares);
+		});
+	})();
 
 
 
 
 
-})();
+	
+
+
+
+// })();
 
