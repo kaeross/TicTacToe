@@ -13,13 +13,9 @@ Player.prototype.isActive = function(){
 };
 
 Player.prototype.activate = function(){
-	if (this.player === player1) {
 		this.player.className = `active players ${this.id}`;
-		player2.className = "players player2";
-	}
-	else if (this.player === player2) {
-		this.player.className = `active players ${this.id}`;
-		player1.className = "players player1";
-	}
 }
 
+Player.prototype.deActivate = function(){
+		this.player.className = `players ${this.id}`;
+}

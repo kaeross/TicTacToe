@@ -1,7 +1,6 @@
 function Box() {
 	this.gridsquares = document.getElementsByClassName("box");
 	this.boxArray = [];
-	this.boxIndex = 0;
 }
 
 Box.prototype.add = function(){

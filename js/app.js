@@ -1,13 +1,112 @@
-(function ticTacToe() {
-
+//(function ticTacToe() {
 	const body = document.body;
 	const board = document.getElementById("board");
 	const startScreen = document.getElementById("start");
 	const endScreen = document.getElementById("finish");
 	const player1 = document.querySelector("#player1");
 	const player2 = document.querySelector("#player2");
-	const playerOne = new Player(player1, "url('img/o.svg')", "player1");
-	const playerTwo = new Player(player2, "url('img/x.svg')", "player2");
+
+	/************************************
+	Player constructor function
+	************************************/
+	function Player(player, svg, id, bgColor) {
+		this.player = player;
+		this.svg = svg;
+		this.id = id;
+		this.bgColor = bgColor;
+	}
+	//check if player is active
+	Player.prototype.isActive = function(){
+		if (this.player.classList.contains('active')) {
+			return true;
+		} else {
+			return false;
+		}
+	};
+
+	//swap player - activate inactive player and deactivate active player
+	Player.prototype.activate = function(){
+		this.player.className = `active players ${this.id}`;
+	}
+
+	Player.prototype.deActivate = function(){
+		this.player.className = `players ${this.id}`;
+	}
+
+	//create player 1 and player 2
+	const playerOne = new Player(player1, "url('img/o.svg')", "player1", "#FFA000");
+	const playerTwo = new Player(player2, "url('img/x.svg')", "player2", "#3688C3");
+
+	/************************************
+	Grid constructor function
+	************************************/
+
+	function Box() {
+		this.gridsquares = document.getElementsByClassName("box");
+		this.boxArray = [];
+		this.freeBoxes = [];
+	}
+
+	Box.prototype.add = function(){
+		for (let i = 0; i < this.gridsquares.length; i += 1) {
+			this.boxArray.push(this.gridsquares[i]);
+			this.freeBoxes.push(this.gridsquares[i]);
+		}
+	}
+
+	Box.prototype.allSelected = function() {
+		let selectedBoxes = 0;
+		for (i = 0; i < this.boxArray.length; i++) {
+			if (this.boxArray[i].classList.contains('selected')) {
+				selectedBoxes += 1;
+			}
+		}
+		if (selectedBoxes === this.boxArray.length) {
+			return true;
+		}
+	}
+
+	// Box.prototype.isFree = function(index) {
+	// 	let freeboxArray = this.boxArray;
+	// 	for (i = 0; i < freeboxArray.length; i++) {
+	// 		if (freeboxArray[i].classList.contains('selected')) {
+	// 			freeboxArray.splice([i], 1);
+	// 		}
+	// 	}
+	// 	return freeboxArray;
+	// }
+
+	Box.prototype.clearBoard = function() {
+		for (i = 0; i < this.boxArray.length; i++) {
+			this.boxArray[i].className = 'box';
+			this.boxArray[i].style.backgroundImage = '';
+			this.boxArray[i].style.backgroundColor = '#EFEFEF';
+		}
+	}
+
+	Box.prototype.isPlayer = function(num, playerID){
+		if (this.boxArray[num].classList.contains(`${playerID}`)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	Box.prototype.win = function(playerID, name) {
+		//if any of these grids are selected - win
+		if (this.isPlayer(0, playerID) && this.isPlayer(1, playerID) && this.isPlayer(2, playerID) || this.isPlayer(3, playerID) && this.isPlayer(4, playerID) && this.isPlayer(5, playerID) || this.isPlayer(6, playerID) && this.isPlayer(7, playerID) && this.isPlayer(8, playerID)) {
+			console.log(name + ' has won');
+			return true;
+		} else if (this.isPlayer(0, playerID) && this.isPlayer(3, playerID) && this.isPlayer(6, playerID) || this.isPlayer(1, playerID) && this.isPlayer(4, playerID) && this.isPlayer(7, playerID) || this.isPlayer(2, playerID) && this.isPlayer(5, playerID) && this.isPlayer(8, playerID)) {
+			console.log(name + ' has won');
+			return true;
+		} else if (this.isPlayer(0, playerID) && this.isPlayer(4, playerID) && this.isPlayer(8, playerID) || this.isPlayer(2, playerID) && this.isPlayer(4, playerID) && this.isPlayer(6, playerID)) {
+			console.log(name + ' has won');
+			return true;
+		} else {
+			return false;
+		}
+	}
 	const gridSquares = new Box();
 	gridSquares.add();
 
@@ -17,7 +116,7 @@
 		hide1.style.display = 'none';
 		hide2.style.display = 'none';
 	}
-	
+
 	//when start button is clicked hide startup screen and show board
 	const button = document.querySelector("a.button");
 	button.addEventListener('click', function() {
@@ -42,10 +141,53 @@
 			playerOne.activate()
 		});
 		player2.addEventListener('click', function(){
-			playerTwo.activate()
+			playerTwo.activate();
+			firstGo();
 		});
 	})();
 
+	function switchPlayer(currentPlayer, nextPlayer) {
+		currentPlayer.deActivate();
+		nextPlayer.activate();
+	}
+
+	function selectBox(player, target) {
+		target.style.backgroundImage = player.svg;
+		target.style.backgroundColor = player.bgColor;
+		target.className = `box selected ${player.id}`;
+	}		
+
+	function getRandomBox(num) {
+		var randomNumber = Math.floor(Math.random()* num);
+		return randomNumber;
+	}
+
+	function firstGo() {
+		function getBox(index) {
+			var box = gridSquares.boxArray[(index)];
+			return box;
+		}
+		var winningOptions = [ getBox(0), getBox(2), getBox(6), getBox(8) ];
+		computerSelect(winningOptions, getRandomBox(4));
+	}
+
+	function freeBoxArray() {
+		for (let i = 0; i < gridSquares.freeBoxes.length; i += 1) {
+			if(gridSquares.freeBoxes[i].classList.contains('selected')) {
+				gridSquares.freeBoxes.splice([i], 1)
+			} 
+		} 
+		return gridSquares.freeBoxes;
+	}
+
+	function computerSelect(array, index) {
+		selectBox(playerTwo, array[index]);
+		switchPlayer(playerTwo, playerOne);
+	}
+
+	function randomComputerSelect() {
+		computerSelect(freeBoxArray(), getRandomBox(freeBoxArray().length));
+	}
 
 
 	//Board controls
@@ -56,6 +198,43 @@
 				return true;
 			} else {
 				return false;
+			}
+		}
+
+
+
+		//check if game has been won/drawn/lost and show appropriate end screen
+		function checkwin() {
+			const winP = document.querySelector("p.message");
+			const player1name = document.querySelector(".player1name").textContent;
+			//show correct screen according to winner or if tied
+			function endGame(gameState, winText) {
+				showPage(endScreen, startScreen, board);
+				endScreen.className = `screen screen-win screen-win-${gameState}`;
+				winP.textContent = winText;
+				newGame();
+			}
+			//new game - clear board
+			function newGame() {
+				function deactivatePlayers() {
+					playerOne.deActivate();
+					playerTwo.deActivate();
+				}
+				const newGameButton = document.querySelector('#finish .button');
+				newGameButton.addEventListener('click', () => {
+					gridSquares.clearBoard();
+					deactivatePlayers();
+					showPage(board, endScreen, startScreen);
+				}) 
+			}
+			if (gridSquares.allSelected() === true) {
+				endGame('tie', 'tie');
+			} else if (gridSquares.win('player1', player1name)) {
+				endGame('one', 'Winner');
+			} else if (gridSquares.win('player1', player1name) === false) {
+				if (gridSquares.win('player2', 'computer')) {
+					endGame('two', 'Winner');
+				}
 			}
 		}
 
@@ -80,66 +259,29 @@
 		});
 
 		//when clicked set tile to appropriate color and background according to active player then swap active player
-		grid.addEventListener('click', (e) => {			
+		grid.addEventListener('click', (e) => {		
 			if (board.style.display = 'block' && playerOne.isActive() === false && playerTwo.isActive() === false) {
 				alert("Oops! You didn't select a player to start!");
 			} else {
 				var box = e.target;
 				if (disabledBox(box) === false) {
 					if (playerOne.isActive()) {
-						box.style.backgroundImage = playerOne.svg;
-						box.style.backgroundColor = '#FFA000';
-						box.className = 'box selected player1';
-						playerTwo.activate();
+						selectBox(playerOne, box);
+						checkwin();
+						switchPlayer(playerOne, playerTwo);
 					} else if (playerTwo.isActive) {
-						box.style.backgroundImage = playerTwo.svg;
-						box.style.backgroundColor = '#3688C3';
-						box.className = 'box selected player2';
-						playerOne.activate(); 
+						selectBox(playerTwo, box);
+						checkwin();
+						switchPlayer(playerTwo, playerOne);
 					}
 				}
 			}
 		});
 
-		//check if game has been won/drawn/lost and show appropriate end screen
-		function checkwin(boxes) {
-			const winP = document.querySelector("p.message");
-			const player1name = document.querySelector(".player1name").textContent;
-			//show correct screen according to winner or if tied
-			function endGame(gameState, winText) {
-				showPage(endScreen, startScreen, board);
-				endScreen.className = `screen screen-win screen-win-${gameState}`;
-				winP.textContent = winText;
-				newGame();
-			}
-			//new game - clear board
-			function newGame() {
-				function deactivatePlayers() {
-					player2.className = "players player2";
-					player1.className = "players player1";
-				}
-				const newGameButton = document.querySelector('#finish .button');
-				newGameButton.addEventListener('click', () => {
-					gridSquares.clearBoard();
-					deactivatePlayers();
-					showPage(board, endScreen, startScreen);
-				}) 
-			}
-			if (boxes.allSelected() === true) {
-				endGame('tie', 'tie');
-			} else if (boxes.win('player1', player1name)) {
-				endGame('one', 'Winner');
-			} else if (boxes.win('player1', player1name) === false) {
-				if (boxes.win('player2', 'computer')) {
-					endGame('two', 'Winner');
-				}
-			}
-		}
-		grid.addEventListener('click', (e) => {
-			checkwin(gridSquares);
-		});
 
 	})();
 
-})();
+
+
+//})();
 
