@@ -1,4 +1,4 @@
-//(function ticTacToe() {
+(function ticTacToe() {
 	const body = document.body;
 	const board = document.getElementById("board");
 	const startScreen = document.getElementById("start");
@@ -155,38 +155,6 @@
 		target.style.backgroundImage = player.svg;
 		target.style.backgroundColor = player.bgColor;
 		target.className = `box selected ${player.id}`;
-	}		
-
-	function getRandomBox(num) {
-		var randomNumber = Math.floor(Math.random()* num);
-		return randomNumber;
-	}
-
-	function firstGo() {
-		function getBox(index) {
-			var box = gridSquares.boxArray[(index)];
-			return box;
-		}
-		var winningOptions = [ getBox(0), getBox(2), getBox(6), getBox(8) ];
-		computerSelect(winningOptions, getRandomBox(4));
-	}
-
-	function freeBoxArray() {
-		for (let i = 0; i < gridSquares.freeBoxes.length; i += 1) {
-			if(gridSquares.freeBoxes[i].classList.contains('selected')) {
-				gridSquares.freeBoxes.splice([i], 1)
-			} 
-		} 
-		return gridSquares.freeBoxes;
-	}
-
-	function computerSelect(array, index) {
-		selectBox(playerTwo, array[index]);
-		switchPlayer(playerTwo, playerOne);
-	}
-
-	function randomComputerSelect() {
-		computerSelect(freeBoxArray(), getRandomBox(freeBoxArray().length));
 	}
 
 
@@ -280,8 +248,5 @@
 
 
 	})();
-
-
-
-//})();
+})();
 
