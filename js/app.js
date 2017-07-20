@@ -195,14 +195,14 @@
 					showPage(board, endScreen, startScreen);
 				}) 
 			}
-			if (gridSquares.allSelected() === true) {
-				endGame('tie', 'tie');
-			} else if (gridSquares.win('player1', player1name)) {
+			if (gridSquares.win('player1', player1name)) {
 				endGame('one', 'Winner');
 			} else if (gridSquares.win('player1', player1name) === false) {
 				if (gridSquares.win('player2', 'computer')) {
 					endGame('two', 'Winner');
 				}
+			} else if (gridSquares.allSelected() === true) {
+				endGame('tie', 'tie');
 			}
 		}
 
