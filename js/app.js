@@ -142,7 +142,6 @@
 		});
 		player2.addEventListener('click', function(){
 			playerTwo.activate();
-			firstGo();
 		});
 	})();
 
@@ -175,34 +174,35 @@
 		function checkwin() {
 			const winP = document.querySelector("p.message");
 			const player1name = document.querySelector(".player1name").textContent;
-			//show correct screen according to winner or if tied
 			function endGame(gameState, winText) {
+				//new game - clear board
+				function newGame() {
+					function deactivatePlayers() {
+						playerOne.deActivate();
+						playerTwo.deActivate();
+					}
+					const newGameButton = document.querySelector('#finish .button');
+					newGameButton.addEventListener('click', () => {
+						gridSquares.clearBoard();
+						deactivatePlayers();
+						showPage(board, endScreen, startScreen);
+					}) 
+				}
 				showPage(endScreen, startScreen, board);
 				endScreen.className = `screen screen-win screen-win-${gameState}`;
 				winP.textContent = winText;
 				newGame();
 			}
-			//new game - clear board
-			function newGame() {
-				function deactivatePlayers() {
-					playerOne.deActivate();
-					playerTwo.deActivate();
-				}
-				const newGameButton = document.querySelector('#finish .button');
-				newGameButton.addEventListener('click', () => {
-					gridSquares.clearBoard();
-					deactivatePlayers();
-					showPage(board, endScreen, startScreen);
-				}) 
-			}
-			if (gridSquares.win('player1', player1name)) {
+
+			//show correct screen according to winner or if tied
+			if (gridSquares.allSelected() === true && gridSquares.win('player1', player1name) != true && gridSquares.win('player2', 'computer') != true ) {
+				endGame('tie', 'tie');
+			} else if (gridSquares.win('player1', player1name)) {
 				endGame('one', 'Winner');
 			} else if (gridSquares.win('player1', player1name) === false) {
 				if (gridSquares.win('player2', 'computer')) {
 					endGame('two', 'Winner');
 				}
-			} else if (gridSquares.allSelected() === true) {
-				endGame('tie', 'tie');
 			}
 		}
 
